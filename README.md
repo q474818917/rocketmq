@@ -28,3 +28,7 @@ It offers a variety of features:
 + 先下载一个4.4.0的二进制包到本地解压
 + 启动NameSrvStartup，同时设置idea的environment variables：ROCKETMQ_HOME = /Users/wangzx/Downloads/rocketmq-all-4.4.0-bin-release
 + 启动BrokerStartup，同时设置Program argument：-n localhost:9876 和environment variables：ROCKETMQ_HOME = /Users/wangzx/Downloads/rocketmq-all-4.4.0-bin-release
+
+## 参考
++ 2PC事务源码分析：https://yq.aliyun.com/articles/684232
++ rocketmq源码分析：https://blog.csdn.net/prestigeding/article/details/78888290
