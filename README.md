@@ -24,26 +24,7 @@ It offers a variety of features:
 
 
 ----------
-
-## Learn it & Contact us
-* Mailing Lists: <https://rocketmq.apache.org/about/contact/>
-* Home: <https://rocketmq.apache.org>
-* Docs: <https://rocketmq.apache.org/docs/quick-start/>
-* Issues: <https://github.com/apache/rocketmq/issues>
-* Rips: <https://github.com/apache/rocketmq/wiki/RocketMQ-Improvement-Proposal>
-* Ask: <https://stackoverflow.com/questions/tagged/rocketmq>
-* Slack: <https://rocketmq-invite-automation.herokuapp.com/>
- 
-
-----------
-
-## Apache RocketMQ Community
-* [RocketMQ Community Projects](https://github.com/apache/rocketmq-externals)
-----------
-
-## Contributing
-We always welcome new contributions, whether for trivial cleanups, [big new features](https://github.com/apache/rocketmq/wiki/RocketMQ-Improvement-Proposal) or other material rewards, more details see [here](http://rocketmq.apache.org/docs/how-to-contribute/).
- 
-----------
-## License
-[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html) Copyright (C) Apache Software Foundation
+## 调试启动
++ 先下载一个4.4.0的二进制包到本地解压
++ 启动NameSrvStartup，同时设置idea的environment variables：ROCKETMQ_HOME = /Users/wangzx/Downloads/rocketmq-all-4.4.0-bin-release
++ 启动BrokerStartup，同时设置Program argument：-n localhost:9876 和environment variables：ROCKETMQ_HOME = /Users/wangzx/Downloads/rocketmq-all-4.4.0-bin-release

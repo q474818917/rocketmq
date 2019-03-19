@@ -24,6 +24,11 @@ import org.apache.rocketmq.common.message.MessageExt;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * 用户需要实现listener逻辑：
+ * 1、执行本地事务
+ * 2、检查本地事务状态
+ */
 public class TransactionListenerImpl implements TransactionListener {
     private AtomicInteger transactionIndex = new AtomicInteger(0);
 
