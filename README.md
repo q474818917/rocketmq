@@ -32,3 +32,4 @@ It offers a variety of features:
 ## 参考
 + 2PC事务源码分析：https://yq.aliyun.com/articles/684232
 + rocketmq源码分析：https://blog.csdn.net/prestigeding/article/details/78888290
++ 伪代码：https://blog.csdn.net/prestigeding/article/details/81318980

@@ -84,6 +84,7 @@ public class NamesrvController {
 
         this.registerProcessor();
 
+        //定时任务(每隔10秒)-移除失效的broker
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
             @Override
@@ -92,6 +93,7 @@ public class NamesrvController {
             }
         }, 5, 10, TimeUnit.SECONDS);
 
+        //定时任务(每隔10分钟)-打印KV配置
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
             @Override

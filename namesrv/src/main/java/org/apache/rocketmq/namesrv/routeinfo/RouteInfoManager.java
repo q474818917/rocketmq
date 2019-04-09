@@ -49,9 +49,9 @@ public class RouteInfoManager {
     private static final InternalLogger log = InternalLoggerFactory.getLogger(LoggerName.NAMESRV_LOGGER_NAME);
     private final static long BROKER_CHANNEL_EXPIRED_TIME = 1000 * 60 * 2;
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
-    private final HashMap<String/* topic */, List<QueueData>> topicQueueTable;
-    private final HashMap<String/* brokerName */, BrokerData> brokerAddrTable;
-    private final HashMap<String/* clusterName */, Set<String/* brokerName */>> clusterAddrTable;
+    private final HashMap<String/* topic */, List<QueueData>> topicQueueTable;  //有哪些topic
+    private final HashMap<String/* brokerName */, BrokerData> brokerAddrTable;  //broker列表信息
+    private final HashMap<String/* clusterName */, Set<String/* brokerName */>> clusterAddrTable;   //集群列表
     private final HashMap<String/* brokerAddr */, BrokerLiveInfo> brokerLiveTable;
     private final HashMap<String/* brokerAddr */, List<String>/* Filter Server */> filterServerTable;
 
@@ -116,7 +116,7 @@ public class RouteInfoManager {
                 Set<String> brokerNames = this.clusterAddrTable.get(clusterName);
                 if (null == brokerNames) {
                     brokerNames = new HashSet<String>();
-                    this.clusterAddrTable.put(clusterName, brokerNames);
+                    this.clusterAddrTable.put(clusterName, brokerNames);    //集群名-broker列表
                 }
                 brokerNames.add(brokerName);
 
@@ -126,7 +126,7 @@ public class RouteInfoManager {
                 if (null == brokerData) {
                     registerFirst = true;
                     brokerData = new BrokerData(clusterName, brokerName, new HashMap<Long, String>());
-                    this.brokerAddrTable.put(brokerName, brokerData);
+                    this.brokerAddrTable.put(brokerName, brokerData);       //broker-broker信息
                 }
                 String oldAddr = brokerData.getBrokerAddrs().put(brokerId, brokerAddr);
                 registerFirst = registerFirst || (null == oldAddr);
