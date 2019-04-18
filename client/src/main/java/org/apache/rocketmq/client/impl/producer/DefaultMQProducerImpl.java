@@ -657,6 +657,7 @@ public class DefaultMQProducerImpl implements MQProducerInner {
             null).setResponseCode(ClientErrorCode.NOT_FOUND_TOPIC_EXCEPTION);
     }
 
+    //查找topic路由
     private TopicPublishInfo tryToFindTopicPublishInfo(final String topic) {
         TopicPublishInfo topicPublishInfo = this.topicPublishInfoTable.get(topic);
         if (null == topicPublishInfo || !topicPublishInfo.ok()) {
@@ -1141,10 +1142,11 @@ public class DefaultMQProducerImpl implements MQProducerInner {
         }
     }
 
+    //发送事务消息
     public TransactionSendResult sendMessageInTransaction(final Message msg,
                                                           final LocalTransactionExecuter localTransactionExecuter, final Object arg)
         throws MQClientException {
-        TransactionListener transactionListener = getCheckListener();
+        TransactionListener transactionListener = getCheckListener();   //TransactionListener接口，由应用自行实现
         if (null == localTransactionExecuter && null == transactionListener) {
             throw new MQClientException("tranExecutor is null", null);
         }

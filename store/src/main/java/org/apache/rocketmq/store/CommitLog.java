@@ -48,7 +48,7 @@ public class CommitLog {
     private static final InternalLogger log = InternalLoggerFactory.getLogger(LoggerName.STORE_LOGGER_NAME);
     // End of file empty MAGIC CODE cbd43194
     private final static int BLANK_MAGIC_CODE = -875286124;
-    private final MappedFileQueue mappedFileQueue;
+    private final MappedFileQueue mappedFileQueue;      //对应../store/commitLog文件夹
     private final DefaultMessageStore defaultMessageStore;
     private final FlushCommitLogService flushCommitLogService;
 
@@ -61,7 +61,7 @@ public class CommitLog {
     private volatile long confirmOffset = -1L;
 
     private volatile long beginTimeInLock = 0;
-    private final PutMessageLock putMessageLock;
+    private final PutMessageLock putMessageLock;        //顺序写消息，先获取该锁
 
     public CommitLog(final DefaultMessageStore defaultMessageStore) {
         this.mappedFileQueue = new MappedFileQueue(defaultMessageStore.getMessageStoreConfig().getStorePathCommitLog(),
@@ -366,6 +366,7 @@ public class CommitLog {
         return new DispatchRequest(-1, false /* success */);
     }
 
+    //计算消息的总长度
     private static int calMsgLength(int bodyLength, int topicLength, int propertiesLength) {
         final int msgLen = 4 //TOTALSIZE
             + 4 //MAGICCODE
@@ -563,7 +564,7 @@ public class CommitLog {
 
         long eclipseTimeInLock = 0;
         MappedFile unlockMappedFile = null;
-        MappedFile mappedFile = this.mappedFileQueue.getLastMappedFile();
+        MappedFile mappedFile = this.mappedFileQueue.getLastMappedFile();       //获取最后一个修改的commitLog文件
 
         putMessageLock.lock(); //spin or ReentrantLock ,depending on store config
         try {
@@ -577,7 +578,7 @@ public class CommitLog {
             if (null == mappedFile || mappedFile.isFull()) {
                 mappedFile = this.mappedFileQueue.getLastMappedFile(0); // Mark: NewFile may be cause noise
             }
-            if (null == mappedFile) {
+            if (null == mappedFile) {                                           //创建第一个commitog文件
                 log.error("create mapped file1 error, topic: " + msg.getTopic() + " clientAddr: " + msg.getBornHostString());
                 beginTimeInLock = 0;
                 return new PutMessageResult(PutMessageStatus.CREATE_MAPEDFILE_FAILED, null);
@@ -631,7 +632,7 @@ public class CommitLog {
         storeStatsService.getSinglePutMessageTopicTimesTotal(msg.getTopic()).incrementAndGet();
         storeStatsService.getSinglePutMessageTopicSizeTotal(topic).addAndGet(result.getWroteBytes());
 
-        handleDiskFlush(result, putMessageResult, msg);
+        handleDiskFlush(result, putMessageResult, msg);         //前面的只是写内存操作，这里是刷到磁盘文件操作
         handleHA(result, putMessageResult, msg);
 
         return putMessageResult;
@@ -1191,6 +1192,7 @@ public class CommitLog {
             long wroteOffset = fileFromOffset + byteBuffer.position();
 
             this.resetByteBuffer(hostHolder, 8);
+            //消息ID-16字节
             String msgId = MessageDecoder.createMessageId(this.msgIdMemory, msgInner.getStoreHostBytes(hostHolder), wroteOffset);
 
             // Record ConsumeQueue information
@@ -1247,6 +1249,7 @@ public class CommitLog {
                 return new AppendMessageResult(AppendMessageStatus.MESSAGE_SIZE_EXCEEDED);
             }
 
+            // 如果消息长度+END_FILE>可用空间，则会创建一个新的commitLog
             // Determines whether there is sufficient free space
             if ((msgLen + END_FILE_MIN_BLANK_LENGTH) > maxBlank) {
                 this.resetByteBuffer(this.msgStoreItemMemory, maxBlank);

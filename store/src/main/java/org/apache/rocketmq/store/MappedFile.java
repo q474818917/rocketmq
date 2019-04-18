@@ -41,6 +41,7 @@ import org.apache.rocketmq.store.config.FlushDiskType;
 import org.apache.rocketmq.store.util.LibC;
 import sun.nio.ch.DirectBuffer;
 
+//对应../store/commitLog文件夹下的文件
 public class MappedFile extends ReferenceResource {
     public static final int OS_PAGE_SIZE = 1024 * 4;
     protected static final InternalLogger log = InternalLoggerFactory.getLogger(LoggerName.STORE_LOGGER_NAME);
@@ -202,9 +203,9 @@ public class MappedFile extends ReferenceResource {
         assert messageExt != null;
         assert cb != null;
 
-        int currentPos = this.wrotePosition.get();
+        int currentPos = this.wrotePosition.get();          //获取当前该文件的写指针
 
-        if (currentPos < this.fileSize) {
+        if (currentPos < this.fileSize) {                   //该文件未写满
             ByteBuffer byteBuffer = writeBuffer != null ? writeBuffer.slice() : this.mappedByteBuffer.slice();
             byteBuffer.position(currentPos);
             AppendMessageResult result = null;
@@ -296,6 +297,7 @@ public class MappedFile extends ReferenceResource {
         return this.getFlushedPosition();
     }
 
+    //内存映射文件提交
     public int commit(final int commitLeastPages) {
         if (writeBuffer == null) {
             //no need to commit data to file channel, so just regard wrotePosition as committedPosition.

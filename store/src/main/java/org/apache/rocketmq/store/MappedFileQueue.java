@@ -29,6 +29,9 @@ import org.apache.rocketmq.common.constant.LoggerName;
 import org.apache.rocketmq.logging.InternalLogger;
 import org.apache.rocketmq.logging.InternalLoggerFactory;
 
+/**
+ * MappedFile的容器
+ */
 public class MappedFileQueue {
     private static final InternalLogger log = InternalLoggerFactory.getLogger(LoggerName.STORE_LOGGER_NAME);
     private static final InternalLogger LOG_ERROR = InternalLoggerFactory.getLogger(LoggerName.STORE_ERROR_LOGGER_NAME);
@@ -39,9 +42,9 @@ public class MappedFileQueue {
 
     private final int mappedFileSize;
 
-    private final CopyOnWriteArrayList<MappedFile> mappedFiles = new CopyOnWriteArrayList<MappedFile>();
+    private final CopyOnWriteArrayList<MappedFile> mappedFiles = new CopyOnWriteArrayList<MappedFile>();     //mappedFile列表
 
-    private final AllocateMappedFileService allocateMappedFileService;
+    private final AllocateMappedFileService allocateMappedFileService;                              //创建MappedFile服务类
 
     private long flushedWhere = 0;
     private long committedWhere = 0;
@@ -74,6 +77,7 @@ public class MappedFileQueue {
         }
     }
 
+    //根据时间戳查找mappedFile
     public MappedFile getMappedFileByTime(final long timestamp) {
         Object[] mfs = this.copyMappedFiles(0);
 
