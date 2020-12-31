@@ -346,13 +346,16 @@ public class MappedFileQueue {
         if (null == mfs)
             return 0;
 
+        //commitLog文件必须>1，删除除了当前文件之前所有文件（需要走下面的判断规则）
         int mfsLength = mfs.length - 1;
         int deleteCount = 0;
         List<MappedFile> files = new ArrayList<MappedFile>();
         if (null != mfs) {
             for (int i = 0; i < mfsLength; i++) {
                 MappedFile mappedFile = (MappedFile) mfs[i];
+                //存活时间 = 最后修改时间 + 默认72小时
                 long liveMaxTimestamp = mappedFile.getLastModifiedTimestamp() + expiredTime;
+                //如果当前时间 > 存活时间
                 if (System.currentTimeMillis() >= liveMaxTimestamp || cleanImmediately) {
                     if (mappedFile.destroy(intervalForcibly)) {
                         files.add(mappedFile);

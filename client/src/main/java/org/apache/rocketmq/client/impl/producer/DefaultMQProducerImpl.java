@@ -175,10 +175,12 @@ public class DefaultMQProducerImpl implements MQProducerInner {
 
                 this.checkConfig();
 
+                //如果一台机器两个进程，就会改变InstanceName为pid
                 if (!this.defaultMQProducer.getProducerGroup().equals(MixAll.CLIENT_INNER_PRODUCER_GROUP)) {
                     this.defaultMQProducer.changeInstanceNameToPID();
                 }
 
+                //创建MQClientInstance
                 this.mQClientFactory = MQClientManager.getInstance().getAndCreateMQClientInstance(this.defaultMQProducer, rpcHook);
 
                 boolean registerOK = mQClientFactory.registerProducer(this.defaultMQProducer.getProducerGroup(), this);

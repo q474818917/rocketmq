@@ -87,6 +87,7 @@ public class DefaultRequestProcessor implements NettyRequestProcessor {
                 return this.deleteKVConfig(ctx, request);
             case RequestCode.QUERY_DATA_VERSION:
                 return queryBrokerTopicConfig(ctx, request);
+            //处理Broker注册消息
             case RequestCode.REGISTER_BROKER:
                 Version brokerVersion = MQVersion.value2Version(request.getVersion());
                 if (brokerVersion.ordinal() >= MQVersion.Version.V3_0_11.ordinal()) {
@@ -274,6 +275,7 @@ public class DefaultRequestProcessor implements NettyRequestProcessor {
         return response;
     }
 
+    //namesrv接收来自broker消息，注册broker
     public RemotingCommand registerBroker(ChannelHandlerContext ctx,
         RemotingCommand request) throws RemotingCommandException {
         final RemotingCommand response = RemotingCommand.createResponseCommand(RegisterBrokerResponseHeader.class);

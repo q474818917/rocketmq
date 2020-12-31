@@ -440,6 +440,7 @@ public class MappedFile extends ReferenceResource {
         return true;
     }
 
+    //清理该commitLog相关依赖
     public boolean destroy(final long intervalForcibly) {
         this.shutdown(intervalForcibly);
 

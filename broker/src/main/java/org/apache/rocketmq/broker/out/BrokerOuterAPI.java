@@ -142,6 +142,7 @@ public class BrokerOuterAPI {
             final int bodyCrc32 = UtilAll.crc32(body);
             requestHeader.setBodyCrc32(bodyCrc32);
             final CountDownLatch countDownLatch = new CountDownLatch(nameServerAddressList.size());
+            //每个broker轮询namesrv进行注册
             for (final String namesrvAddr : nameServerAddressList) {
                 brokerOuterExecutor.execute(new Runnable() {
                     @Override

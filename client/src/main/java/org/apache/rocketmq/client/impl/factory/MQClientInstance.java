@@ -227,7 +227,7 @@ public class MQClientInstance {
                 case CREATE_JUST:
                     this.serviceState = ServiceState.START_FAILED;
                     // If not specified,looking address from name server
-                    if (null == this.clientConfig.getNamesrvAddr()) {
+                    if (null == this.clientConfig.getNamesrvAddr()) {   //clientConfig.getNamesrvAddr() 是nameSrv地址
                         this.mQClientAPIImpl.fetchNameServerAddr();
                     }
                     // Start request-response channel

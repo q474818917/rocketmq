@@ -26,7 +26,7 @@ import org.apache.rocketmq.logging.InternalLogger;
 import org.apache.rocketmq.remoting.RPCHook;
 
 /**
- * 管理全局的client-clientInstance
+ * 管理全局的clientId-clientInstance
  */
 public class MQClientManager {
     private final static InternalLogger log = ClientLogger.getLog();

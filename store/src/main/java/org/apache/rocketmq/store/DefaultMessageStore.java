@@ -1169,7 +1169,7 @@ public class DefaultMessageStore implements MessageStore {
     }
 
     private void addScheduleTask() {
-
+        //定时删除过期文件，每10秒执行一次
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -1214,8 +1214,8 @@ public class DefaultMessageStore implements MessageStore {
     }
 
     private void cleanFilesPeriodically() {
-        this.cleanCommitLogService.run();
-        this.cleanConsumeQueueService.run();
+        this.cleanCommitLogService.run();       //删除commitLog
+        this.cleanConsumeQueueService.run();    //删除ConsumeQueue
     }
 
     private void checkSelf() {
@@ -1462,9 +1462,9 @@ public class DefaultMessageStore implements MessageStore {
 
         public void run() {
             try {
-                this.deleteExpiredFiles();
+                this.deleteExpiredFiles();      //删除过期文件
 
-                this.redeleteHangedFile();
+                this.redeleteHangedFile();      //删除因hang住再次删除
             } catch (Throwable e) {
                 DefaultMessageStore.log.warn(this.getServiceName() + " service has exception. ", e);
             }
@@ -1472,7 +1472,9 @@ public class DefaultMessageStore implements MessageStore {
 
         private void deleteExpiredFiles() {
             int deleteCount = 0;
+            //删除前文件保留时长，默认72小时
             long fileReservedTime = DefaultMessageStore.this.getMessageStoreConfig().getFileReservedTime();
+            //多个文件删除之间时间间隔
             int deletePhysicFilesInterval = DefaultMessageStore.this.getMessageStoreConfig().getDeleteCommitLogFilesInterval();
             int destroyMapedFileIntervalForcibly = DefaultMessageStore.this.getMessageStoreConfig().getDestroyMapedFileIntervalForcibly();
 
@@ -1521,6 +1523,7 @@ public class DefaultMessageStore implements MessageStore {
             return CleanCommitLogService.class.getSimpleName();
         }
 
+        //时间是否达到凌晨4点
         private boolean isTimeToDelete() {
             String when = DefaultMessageStore.this.getMessageStoreConfig().getDeleteWhen();
             if (UtilAll.isItTimeToDo(when)) {

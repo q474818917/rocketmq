@@ -308,6 +308,7 @@ public class BrokerController {
                 Executors.newFixedThreadPool(this.brokerConfig.getConsumerManageThreadPoolNums(), new ThreadFactoryImpl(
                     "ConsumerManageThread_"));
 
+            //初始化各种Processor实例，将之添加到Processor容器中
             this.registerProcessor();
 
             final long initialDelay = UtilAll.computNextMorningTimeMillis() - System.currentTimeMillis();
